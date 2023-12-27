@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Code Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
+</head>
+<body style="background: #A1A9AC">
+        <div style="width: 320px; height: 568px; left: 0px; top: 0px; position: absolute; background: #A1A9AC"></div>
+        <div style="height: 81px; left: 37px; top: 40px; position: absolute; text-align: center; color: #D8B95A; font-size: 100px; font-family: Oswald; font-weight: 700; word-wrap: break-word">Please Scan a ticket</div>
+        <div id="qr-reader" style="width:75%; left: 12%; top: 500px; border: #A1A9AC 0px;"></div>
+    
+
+<script>
+    function docReady(fn) {
+        // see if DOM is already available
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            // call on next available tick
+            setTimeout(fn, 1);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
+
+    docReady(function () {
+        var lastResult, countResults = 0;
+        function onScanSuccess(decodedText, decodedResult) {
+            if (decodedText !== lastResult) {
+                ++countResults;
+                lastResult = decodedText;
+                // Handle on success condition with the decoded message.
+                console.log(`Scan result ${decodedText}`, decodedResult);
+            }
+        }
+
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess);
+    });
+</script>
+
+</body>
+</html>
