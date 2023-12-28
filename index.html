@@ -56,14 +56,17 @@
                     ++countResults;
                     lastResult = decodedText;
                     console.log(`Scan result ${decodedText}`, decodedResult);
-                    $.ajax({
-                        url: "https://dev.iceaccount.co.uk/dashboard/ajax/eventredeemAjax.php",
-                        method: "POST",
-                        data: { 'transaction_id': decodedText },
-                        success: function (data) {
-                            $("#qr-result-modal").html(data);
-                        }
-                    });
+                    var proxyUrl = "http://35.176.115.241:3000/proxy";
+                var targetUrl = "https://dev.iceaccount.co.uk/dashboard/ajax/eventredeemAjax.php";
+                
+                $.ajax({
+                    url: proxyUrl + "?url=" + encodeURIComponent(targetUrl),
+                    method: "POST",
+                    data: { 'transaction_id': decodedText },
+                    success: function (data) {
+                        $("#qr-result-modal").html(data);
+                    }
+                });
                     $('#qr-result-modal').modal('show');
                     html5QrcodeScanner.clear(); // Clear the QR Code scanner.
                 }
