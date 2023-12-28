@@ -1,32 +1,46 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>QR Code Scanner</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-</head>
 
+    <style>
+        #start-scan-btn {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            padding: 10px 20px;
+        }
+        #headertxt {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 100px;
+            font-family: Oswald;
+            font-weight: 700;
+            color: #D8B95A;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
 <body style="background: #A1A9AC">
-    <div style="width: 320px; height: 568px; left: 0px; top: 0px; position: absolute; background: #A1A9AC"></div>
-    <div
-        style="height: 81px; left: 37px; top: 40px; position: absolute; text-align: center; color: #D8B95A; font-size: 100px; font-family: Oswald; font-weight: 700; word-wrap: break-word">
+    <div id="headertxt">
         Please Scan a ticket</div>
     <div id="reader" style="width:75%; left: 12%; top: 500px; border: #A1A9AC 0px;"></div>
-    <div class="modal" id="qr-result-modal" tabindex="-1" role="dialog">
-
-    </div>
-
+    <button id="start-scan-btn" class="btn btn-primary btn-lg">Start Scanning</button>
+    <div class="modal" id="qr-result-modal" tabindex="-1" role="dialog"></div>
 
     <script>
         function docReady(fn) {
-            // see if DOM is already available
             if (document.readyState === "complete" || document.readyState === "interactive") {
-                // call on next available tick
                 setTimeout(fn, 1);
             } else {
                 document.addEventListener("DOMContentLoaded", fn);
@@ -34,6 +48,7 @@
         }
 
         docReady(function () {
+            var html5QrcodeScanner;
             var lastResult, countResults = 0;
 
             function onScanSuccess(decodedText, decodedResult) {
@@ -49,17 +64,19 @@
                             $("#qr-result-modal").html(data);
                         }
                     });
-
                     $('#qr-result-modal').modal('show');
-                };
+                    html5QrcodeScanner.clear(); // Clear the QR Code scanner.
+                }
             }
 
-
-            var html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", { fps: 10, qrbox: 400 });
-            html5QrcodeScanner.render(onScanSuccess);
+            $('#start-scan-btn').click(function () {
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.clear(); // Clear the previous scanner instance if exists.
+                }
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 400 });
+                html5QrcodeScanner.render(onScanSuccess);
+            });
         });
     </script>
 </body>
-
 </html>
